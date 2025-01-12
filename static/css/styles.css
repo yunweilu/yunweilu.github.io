@@ -1,0 +1,252 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: black;  /* Keep background black for all pages */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.taiji-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.taiji-image {
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.taiji-image:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .taiji-image {
+        width: 90%;
+        height: auto;
+    }
+}
+
+/* Optional: Hover effects */
+.left-side:hover,
+.right-side:hover {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+/* Existing styles... */
+
+/* Gallery Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+
+/* Form Styling */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+.research-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-origin: center;
+    opacity: 0;
+    animation: fadeInAndZoom 3.1s ease-in-out forwards;
+    transition: transform 0.5s ease-in-out;  /* Smoother transition for zoom */
+}
+
+/* Add a class that will be applied after the initial animation */
+.research-container.animation-complete {
+    animation: none;  /* Remove the initial animation */
+    opacity: 1;  /* Keep visible */
+    transform: scale(2);  /* Initial zoomed state */
+}
+
+@keyframes fadeInAndZoom {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+    40% {  /* Start fading in earlier */
+        opacity: 0.3;
+        transform: scale(0.6);
+    }
+    80% {  /* Gradually increase opacity while starting to zoom */
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    100% {  /* Complete the zoom with full opacity */
+        opacity: 1;
+        transform: scale(2);
+    }
+}
+
+.research-text {
+    font-size: 4rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* Only apply hover effect when not zoomed out */
+body:not(.zoomed-out) .research-text:hover {
+    transform: scale(1.05);
+}
+
+/* Remove hover effect and ensure no transform when zoomed out */
+body.zoomed-out .research-text {
+    cursor: default;
+    transform: none !important;  /* Override any transform */
+    transition: none;  /* Remove transition when zoomed out */
+}
+
+.letter {
+    display: inline-block;
+}
+
+/* Static white color for "My " and "Res" */
+.letter:nth-child(1),  /* M */
+.letter:nth-child(2),  /* y */
+.letter:nth-child(3),  /* space */
+.letter:nth-child(4),  /* R */
+.letter:nth-child(5),  /* e */
+.letter:nth-child(6) { /* s */
+    color: white;
+}
+
+/* Gradual fade to different shades for "earch" */
+.letter:nth-child(7) { /* e */
+    color: rgb(180, 180, 180);  /* Light grey */
+}
+.letter:nth-child(8) { /* a */
+    color: rgb(140, 140, 140);  /* Darker grey */
+}
+.letter:nth-child(9) { /* r */
+    color: rgb(100, 100, 100);  /* Even darker */
+}
+.letter:nth-child(10) { /* c */
+    color: rgb(60, 60, 60);     /* Very dark grey */
+}
+.letter:nth-child(11) { /* h */
+    color: rgb(20, 20, 20);     /* Almost black */
+}
+
+.research-page, .life-page {
+    min-height: 100vh;
+    padding: 2rem;
+    color: white;  /* Change text color to white */
+}
+
+.research-page h1, .life-page h1 {
+    color: white;  /* Change heading color to white */
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+/* Add some basic container styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Remove the index-page specific styling since we want black background everywhere */
+
+.zoom-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.zoom-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.zoom-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* When zoomed out fully */
+body.zoomed-out {
+    cursor: pointer;
+}
+
+/* Update research container for zoom out state */
+.research-container.zoomed-out {
+    transform: scale(0.3);
+}
+
+/* Disable pointer cursor on research text when zoomed out */
+body.zoomed-out .research-text {
+    cursor: default;
+}
