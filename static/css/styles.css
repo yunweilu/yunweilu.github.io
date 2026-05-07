@@ -103,7 +103,7 @@ body {
 
 .profile-copy ul {
   margin: 18px 0 0;
-  padding: 0;
+  padding: 0 0 0 clamp(28px, 4vw, 54px);
   list-style: none;
   color: var(--muted);
   font-size: clamp(0.98rem, 1.45vw, 1.22rem);
