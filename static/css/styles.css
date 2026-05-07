@@ -58,7 +58,7 @@ body {
   display: flex;
   align-items: baseline;
   justify-content: flex-start;
-  gap: clamp(12px, 1.4vw, 18px);
+  gap: clamp(6px, 0.8vw, 10px);
   width: auto;
   min-width: 0;
 }
@@ -228,7 +228,7 @@ body {
 
   .header-copy {
     flex: 0 0 auto;
-    gap: 8px;
+    gap: 6px;
   }
 
   .portrait-panel img {
