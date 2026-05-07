@@ -139,10 +139,6 @@ body {
   text-decoration: none;
 }
 
-.primary-links a:hover {
-  text-decoration: underline;
-}
-
 .social-links {
   display: flex;
   gap: 14px;
