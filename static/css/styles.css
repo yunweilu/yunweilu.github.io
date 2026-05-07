@@ -82,7 +82,7 @@ body {
 
 .intro-copy {
   max-width: 620px;
-  margin: auto 0;
+  margin: auto 0 auto auto;
   transform: translateY(-4vh);
 }
 
