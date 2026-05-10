@@ -63,16 +63,6 @@ const labelOffsets = {
 
 const smallLabelCountries = new Set(["AUT", "CHE", "ISR", "NLD", "SGP"]);
 
-const atlasPalette = [
-  "#9ce8f2",
-  "#f7cfd2",
-  "#f9e29d",
-  "#cdeec4",
-  "#ffd9a8",
-  "#bde8ff",
-  "#f5b8b0",
-];
-
 function emptyCounts() {
   return {
     academic_theory: 0,
@@ -173,13 +163,8 @@ function countryClass(country) {
   ].filter(Boolean).join(" ");
 }
 
-function countryFill(feature, country) {
-  if (country) {
-    return null;
-  }
-
-  const index = Number(feature.id || 0) % atlasPalette.length;
-  return atlasPalette[index];
+function countryFill(country) {
+  return country ? null : "#ffffff";
 }
 
 function tooltipHtml(country) {
@@ -205,34 +190,6 @@ function renderMap() {
     .attr("height", height)
     .attr("fill", "transparent");
 
-  svg.append("path")
-    .datum(d3.geoGraticule10())
-    .attr("class", "map-graticule")
-    .attr("d", path);
-
-  const oceanLabels = [
-    { text: "ARCTIC OCEAN", coordinates: [-42, 76] },
-    { text: "NORTH PACIFIC OCEAN", coordinates: [-151, 17] },
-    { text: "NORTH PACIFIC OCEAN", coordinates: [160, 14] },
-    { text: "SOUTH ATLANTIC OCEAN", coordinates: [-24, -38] },
-    { text: "INDIAN OCEAN", coordinates: [78, -27] },
-  ];
-
-  svg.selectAll(".ocean-label")
-    .data(oceanLabels)
-    .join("text")
-    .attr("class", "ocean-label")
-    .attr("x", (d) => projection(d.coordinates)[0])
-    .attr("y", (d) => projection(d.coordinates)[1])
-    .selectAll("tspan")
-    .data((d) => d.text.split(" "))
-    .join("tspan")
-    .attr("x", function () {
-      return d3.select(this.parentNode).attr("x");
-    })
-    .attr("dy", (d, index) => index === 0 ? 0 : 19)
-    .text((d) => d);
-
   svg.append("g")
     .selectAll("path")
     .data(topologyFeatures)
@@ -243,7 +200,7 @@ function renderMap() {
     })
     .attr("fill", (feature) => {
       const iso3 = numericIdToIso3[feature.id];
-      return countryFill(feature, iso3 ? countries[iso3] : null);
+      return countryFill(iso3 ? countries[iso3] : null);
     })
     .attr("d", path)
     .attr("aria-label", (feature) => {
@@ -376,7 +333,8 @@ Promise.all([
 ])
   .then(([dataset, topology]) => {
     countries = aggregateByCountry(dataset.entries);
-    topologyFeatures = topojson.feature(topology, topology.objects.countries).features;
+    topologyFeatures = topojson.feature(topology, topology.objects.countries).features
+      .filter((feature) => feature.properties.name !== "Antarctica");
     document.getElementById("mapScope").textContent = dataset.metadata.scope;
     Object.values(countries).forEach((country) => {
       country.groups.sort((a, b) => a.name.localeCompare(b.name));
