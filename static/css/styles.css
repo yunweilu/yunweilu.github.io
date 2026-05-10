@@ -281,16 +281,14 @@ body {
   background: linear-gradient(180deg, #2fb5c8 0%, #1fa3ba 100%);
 }
 
-.map-country-base {
+.continent-land {
   fill: #ffffff;
-  stroke: rgba(21, 98, 126, 0.62);
-  stroke-width: 0.65;
+  stroke: none;
 }
 
 .map-country {
-  stroke: rgba(9, 78, 112, 0.78);
-  stroke-width: 0.82;
-  transition: fill 160ms ease, stroke 160ms ease, filter 160ms ease;
+  stroke: none;
+  transition: fill 160ms ease, filter 160ms ease, opacity 160ms ease;
 }
 
 .map-country.has-data {
@@ -300,9 +298,8 @@ body {
 
 .map-country.has-data:hover,
 .map-country.selected {
-  stroke: #082f49;
-  stroke-width: 1.8;
   filter: drop-shadow(0 9px 9px rgba(5, 58, 83, 0.34));
+  opacity: 0.92;
 }
 
 .map-country.empty {

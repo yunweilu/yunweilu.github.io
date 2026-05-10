@@ -20,6 +20,7 @@ const layerOrder = Object.keys(layers);
 let activeLayer = "academic_experiments";
 let countries = {};
 let topologyFeatures = [];
+let landFeature = null;
 let selectedIso3 = null;
 
 const iso3ToNumericId = {
@@ -135,25 +136,13 @@ function renderFilters() {
 }
 
 function countryClass(country) {
-  if (!country) {
-    return "map-country-base";
-  }
-
-  if (!hasActiveGroups(country)) {
-    return "map-country empty";
-  }
-
   return [
     "map-country",
     "has-data",
     `layer-${layers[activeLayer].className}`,
     `intensity-${intensity(country.counts[activeLayer], maxForLayer(activeLayer))}`,
     selectedIso3 === country.iso3 ? "selected" : "",
-  ].filter(Boolean).join(" ");
-}
-
-function countryFill(country) {
-  return country ? null : "#ffffff";
+  ].join(" ");
 }
 
 function tooltipHtml(country) {
@@ -171,7 +160,7 @@ function renderMap() {
   svg.selectAll("*").remove();
 
   const projection = d3.geoNaturalEarth1();
-  projection.fitExtent([[28, 36], [1172, 604]], { type: "FeatureCollection", features: topologyFeatures });
+  projection.fitExtent([[28, 36], [1172, 604]], landFeature);
   const path = d3.geoPath(projection);
 
   svg.append("rect")
@@ -179,73 +168,50 @@ function renderMap() {
     .attr("height", height)
     .attr("fill", "transparent");
 
+  svg.append("path")
+    .datum(landFeature)
+    .attr("class", "continent-land")
+    .attr("d", path);
+
+  const activeFeatures = topologyFeatures
+    .map((feature) => ({ feature, iso3: numericIdToIso3[feature.id] }))
+    .filter((item) => item.iso3 && hasActiveGroups(countries[item.iso3]));
+
   svg.append("g")
     .selectAll("path")
-    .data(topologyFeatures)
+    .data(activeFeatures)
     .join("path")
-    .attr("class", (feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      return countryClass(iso3 ? countries[iso3] : null);
-    })
-    .attr("fill", (feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      return countryFill(iso3 ? countries[iso3] : null);
-    })
-    .attr("d", path)
-    .attr("aria-label", (feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      const country = iso3 ? countries[iso3] : null;
-      return `${country ? country.country : feature.properties.name} ${country ? `${country.counts[activeLayer]} ${layers[activeLayer].label} entries` : "no entries"}`;
-    })
-    .attr("role", (feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      return hasActiveGroups(iso3 ? countries[iso3] : null) ? "button" : "img";
-    })
-    .attr("tabindex", (feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      return hasActiveGroups(iso3 ? countries[iso3] : null) ? "0" : "-1";
-    })
-    .on("click", (event, feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      if (!iso3 || !hasActiveGroups(countries[iso3])) {
-        return;
-      }
-
-      selectedIso3 = iso3;
+    .attr("class", (d) => countryClass(countries[d.iso3]))
+    .attr("d", (d) => path(d.feature))
+    .attr("aria-label", (d) => `${countries[d.iso3].country} ${countries[d.iso3].counts[activeLayer]} ${layers[activeLayer].label} entries`)
+    .attr("role", "button")
+    .attr("tabindex", "0")
+    .on("click", (event, d) => {
+      selectedIso3 = d.iso3;
       render();
     })
-    .on("keydown", (event, feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      if (!iso3 || !hasActiveGroups(countries[iso3]) || (event.key !== "Enter" && event.key !== " ")) {
+    .on("keydown", (event, d) => {
+      if (event.key !== "Enter" && event.key !== " ") {
         return;
       }
 
       event.preventDefault();
-      selectedIso3 = iso3;
+      selectedIso3 = d.iso3;
       render();
     })
-    .on("mousemove", (event, feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      if (!iso3 || !hasActiveGroups(countries[iso3])) {
-        return;
-      }
-
+    .on("mousemove", (event, d) => {
       tooltip.hidden = false;
       tooltip.style.left = `${event.clientX + 14}px`;
       tooltip.style.top = `${event.clientY + 14}px`;
-      tooltip.innerHTML = tooltipHtml(countries[iso3]);
+      tooltip.innerHTML = tooltipHtml(countries[d.iso3]);
     })
     .on("mouseleave", () => {
       tooltip.hidden = true;
     });
 
-  const labeledFeatures = topologyFeatures
-    .map((feature) => ({ feature, iso3: numericIdToIso3[feature.id] }))
-    .filter((item) => item.iso3 && hasActiveGroups(countries[item.iso3]));
-
   svg.append("g")
     .selectAll("text")
-    .data(labeledFeatures)
+    .data(activeFeatures)
     .join("text")
     .attr("class", (d) => `country-label${smallLabelCountries.has(d.iso3) ? " small-country" : ""}`)
     .attr("x", (d) => {
@@ -329,8 +295,17 @@ Promise.all([
 ])
   .then(([dataset, topology]) => {
     countries = aggregateByCountry(dataset.entries);
-    topologyFeatures = topojson.feature(topology, topology.objects.countries).features
-      .filter((feature) => feature.properties.name !== "Antarctica");
+    const visibleGeometries = topology.objects.countries.geometries
+      .filter((geometry) => geometry.properties.name !== "Antarctica");
+    topologyFeatures = topojson.feature(topology, {
+      type: "GeometryCollection",
+      geometries: visibleGeometries,
+    }).features;
+    landFeature = {
+      type: "Feature",
+      properties: { name: "World land without Antarctica" },
+      geometry: topojson.merge(topology, visibleGeometries),
+    };
     document.getElementById("mapScope").textContent = dataset.metadata.scope;
     Object.values(countries).forEach((country) => {
       country.groups.sort((a, b) => a.name.localeCompare(b.name));
