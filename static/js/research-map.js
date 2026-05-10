@@ -17,7 +17,7 @@ const layers = {
 };
 
 const layerOrder = Object.keys(layers);
-const activeLayers = new Set(layerOrder);
+let activeLayer = "academic_experiments";
 let countries = {};
 let topologyFeatures = [];
 let selectedIso3 = null;
@@ -91,20 +91,6 @@ function aggregateByCountry(entries) {
   }, {});
 }
 
-function dominantLayer(country) {
-  return layerOrder.reduce((dominant, layer) => {
-    if (!activeLayers.has(layer) || country.counts[layer] === 0) {
-      return dominant;
-    }
-
-    if (!dominant || country.counts[layer] > country.counts[dominant]) {
-      return layer;
-    }
-
-    return dominant;
-  }, null);
-}
-
 function maxForLayer(layer) {
   return Object.values(countries).reduce((max, country) => Math.max(max, country.counts[layer]), 0);
 }
@@ -118,7 +104,11 @@ function intensity(count, maxCount) {
 }
 
 function activeTotal(country) {
-  return layerOrder.reduce((sum, layer) => activeLayers.has(layer) ? sum + country.counts[layer] : sum, 0);
+  return country.counts[activeLayer];
+}
+
+function hasActiveGroups(country) {
+  return Boolean(country && country.counts[activeLayer] > 0);
 }
 
 function renderFilters() {
@@ -129,13 +119,13 @@ function renderFilters() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "filter-toggle";
-    button.setAttribute("aria-pressed", String(activeLayers.has(layer)));
+    button.setAttribute("aria-pressed", String(activeLayer === layer));
     button.innerHTML = `<span class="filter-swatch ${layers[layer].swatchClass}"></span>${layers[layer].label}`;
     button.addEventListener("click", () => {
-      if (activeLayers.has(layer)) {
-        activeLayers.delete(layer);
-      } else {
-        activeLayers.add(layer);
+      activeLayer = layer;
+
+      if (selectedIso3 && !hasActiveGroups(countries[selectedIso3])) {
+        selectedIso3 = null;
       }
 
       render();
@@ -149,16 +139,15 @@ function countryClass(country) {
     return "map-country-base";
   }
 
-  const layer = dominantLayer(country);
-  if (!layer) {
-    return "map-country has-data empty";
+  if (!hasActiveGroups(country)) {
+    return "map-country empty";
   }
 
   return [
     "map-country",
     "has-data",
-    `layer-${layers[layer].className}`,
-    `intensity-${intensity(country.counts[layer], maxForLayer(layer))}`,
+    `layer-${layers[activeLayer].className}`,
+    `intensity-${intensity(country.counts[activeLayer], maxForLayer(activeLayer))}`,
     selectedIso3 === country.iso3 ? "selected" : "",
   ].filter(Boolean).join(" ");
 }
@@ -206,13 +195,19 @@ function renderMap() {
     .attr("aria-label", (feature) => {
       const iso3 = numericIdToIso3[feature.id];
       const country = iso3 ? countries[iso3] : null;
-      return `${country ? country.country : feature.properties.name} ${country ? `${country.total} entries` : "no entries"}`;
+      return `${country ? country.country : feature.properties.name} ${country ? `${country.counts[activeLayer]} ${layers[activeLayer].label} entries` : "no entries"}`;
     })
-    .attr("role", (feature) => numericIdToIso3[feature.id] ? "button" : "img")
-    .attr("tabindex", (feature) => numericIdToIso3[feature.id] ? "0" : "-1")
+    .attr("role", (feature) => {
+      const iso3 = numericIdToIso3[feature.id];
+      return hasActiveGroups(iso3 ? countries[iso3] : null) ? "button" : "img";
+    })
+    .attr("tabindex", (feature) => {
+      const iso3 = numericIdToIso3[feature.id];
+      return hasActiveGroups(iso3 ? countries[iso3] : null) ? "0" : "-1";
+    })
     .on("click", (event, feature) => {
       const iso3 = numericIdToIso3[feature.id];
-      if (!iso3 || !countries[iso3]) {
+      if (!iso3 || !hasActiveGroups(countries[iso3])) {
         return;
       }
 
@@ -221,7 +216,7 @@ function renderMap() {
     })
     .on("keydown", (event, feature) => {
       const iso3 = numericIdToIso3[feature.id];
-      if (!iso3 || !countries[iso3] || (event.key !== "Enter" && event.key !== " ")) {
+      if (!iso3 || !hasActiveGroups(countries[iso3]) || (event.key !== "Enter" && event.key !== " ")) {
         return;
       }
 
@@ -231,7 +226,7 @@ function renderMap() {
     })
     .on("mousemove", (event, feature) => {
       const iso3 = numericIdToIso3[feature.id];
-      if (!iso3 || !countries[iso3]) {
+      if (!iso3 || !hasActiveGroups(countries[iso3])) {
         return;
       }
 
@@ -246,7 +241,7 @@ function renderMap() {
 
   const labeledFeatures = topologyFeatures
     .map((feature) => ({ feature, iso3: numericIdToIso3[feature.id] }))
-    .filter((item) => item.iso3 && countries[item.iso3]);
+    .filter((item) => item.iso3 && hasActiveGroups(countries[item.iso3]));
 
   svg.append("g")
     .selectAll("text")
@@ -273,7 +268,7 @@ function renderPanel() {
     return;
   }
 
-  const visibleGroups = country.groups.filter((group) => activeLayers.has(group.layer));
+  const visibleGroups = country.groups.filter((group) => group.layer === activeLayer);
   const groupItems = visibleGroups.map((group) => {
     const location = `${group.city}${group.state_province ? `, ${group.state_province}` : ""}`;
     const tags = [
@@ -303,7 +298,7 @@ function renderPanel() {
       <div class="panel-counts">
         ${layerOrder.map((layer) => `<div class="panel-count"><strong>${country.counts[layer]}</strong><span>${layers[layer].label}</span></div>`).join("")}
       </div>
-      <p>Showing ${visibleGroups.length} of ${country.groups.length} entries matching the active filters.</p>
+      <p>Showing ${visibleGroups.length} ${layers[activeLayer].label.toLowerCase()} entries in this country.</p>
       <ul class="group-list">${groupItems}</ul>
     </div>
   `;
@@ -316,7 +311,8 @@ function renderPanel() {
 
 function renderSummary() {
   const visibleEntries = Object.values(countries).reduce((sum, country) => sum + activeTotal(country), 0);
-  document.getElementById("countryCount").textContent = String(Object.keys(countries).length);
+  const visibleCountries = Object.values(countries).filter(hasActiveGroups).length;
+  document.getElementById("countryCount").textContent = String(visibleCountries);
   document.getElementById("visibleEntryCount").textContent = String(visibleEntries);
 }
 
