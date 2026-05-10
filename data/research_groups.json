@@ -2,7 +2,7 @@
   "metadata": {
     "title": "Starter map dataset: superconducting-qubit research groups and companies",
     "generated_at": "2026-05-10",
-    "scope": "Starter list for an interactive country-level map of superconducting-qubit / circuit-QED academic groups, centers, and industry organizations. Not exhaustive.",
+    "scope": "Starter list for an interactive location-level marker map of superconducting-qubit / circuit-QED academic groups, centers, and industry organizations. Not exhaustive.",
     "recommended_layers": {
       "academic_theory": {
         "label": "Academic Theory",
@@ -18,11 +18,11 @@
       }
     },
     "weight_definition": {
-      "3": "core superconducting-qubit / circuit-QED group or company",
+      "1": "adjacent or early-stage ecosystem entry",
       "2": "active group, facility, center, or broader superconducting-circuit effort",
-      "1": "adjacent or early-stage ecosystem entry"
+      "3": "core superconducting-qubit / circuit-QED group or company"
     },
-    "plotting_note": "For a country choropleth, aggregate by iso3 and layer. For a later marker map, use latitude/longitude.",
+    "plotting_note": "For the marker map, plot each entry by latitude/longitude and show marker_tooltip.organization_name plus marker_tooltip.pi_name on hover. Do not aggregate by country for hover content.",
     "fields": [
       "id",
       "name",
@@ -42,7 +42,8 @@
       "focus_tags",
       "weight",
       "source_url",
-      "notes"
+      "notes",
+      "marker_tooltip"
     ]
   },
   "entries": [
@@ -70,7 +71,11 @@
       ],
       "weight": 3,
       "source_url": "https://schusterlab.stanford.edu/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Stanford University",
+        "pi_name": "David Schuster"
+      }
     },
     {
       "id": "houck_lab",
@@ -96,7 +101,11 @@
       ],
       "weight": 3,
       "source_url": "https://houcklab.princeton.edu/home",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Princeton University",
+        "pi_name": "Andrew Houck"
+      }
     },
     {
       "id": "schoelkopf_lab",
@@ -122,7 +131,11 @@
       ],
       "weight": 3,
       "source_url": "https://rsl.yale.edu/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Yale University",
+        "pi_name": "Robert Schoelkopf"
+      }
     },
     {
       "id": "oliver_group",
@@ -148,7 +161,11 @@
       ],
       "weight": 3,
       "source_url": "https://equs.mit.edu/william-d-oliver/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "MIT",
+        "pi_name": "William Oliver"
+      }
     },
     {
       "id": "siddiqi_lab",
@@ -174,7 +191,11 @@
       ],
       "weight": 3,
       "source_url": "https://aqt.lbl.gov/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "UC Berkeley / Lawrence Berkeley National Laboratory",
+        "pi_name": "Irfan Siddiqi"
+      }
     },
     {
       "id": "cleland_lab",
@@ -200,7 +221,11 @@
       ],
       "weight": 2,
       "source_url": "https://clelandlab.uchicago.edu/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Chicago",
+        "pi_name": "Andrew Cleland"
+      }
     },
     {
       "id": "mcdermott_group",
@@ -226,7 +251,11 @@
       ],
       "weight": 2,
       "source_url": "https://mcdermottgroup.physics.wisc.edu/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Wisconsin–Madison",
+        "pi_name": "Robert McDermott"
+      }
     },
     {
       "id": "plourde_group",
@@ -252,7 +281,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.physics.wisc.edu/2024/11/01/welcome-prof-britton-plourde/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Wisconsin–Madison",
+        "pi_name": "Britton Plourde"
+      }
     },
     {
       "id": "manucharyan_lab",
@@ -277,7 +310,11 @@
       ],
       "weight": 3,
       "source_url": "https://jqi.umd.edu/people/vladimir-manucharyan",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Maryland / JQI",
+        "pi_name": "Vladimir Manucharyan"
+      }
     },
     {
       "id": "chen_wang_lab",
@@ -302,7 +339,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.umass.edu/physics/about/directory/chen-wang",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Massachusetts Amherst",
+        "pi_name": "Chen Wang"
+      }
     },
     {
       "id": "shankar_lab",
@@ -327,7 +368,11 @@
       ],
       "weight": 2,
       "source_url": "https://sites.utexas.edu/shyamshankar/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Texas at Austin",
+        "pi_name": "Shyam Shankar"
+      }
     },
     {
       "id": "murch_lab",
@@ -352,7 +397,11 @@
       ],
       "weight": 2,
       "source_url": "https://physics.berkeley.edu/people/kater-murch",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "UC Berkeley",
+        "pi_name": "Kater Murch"
+      }
     },
     {
       "id": "pfaff_lab",
@@ -377,7 +426,11 @@
       ],
       "weight": 2,
       "source_url": "https://pfaff.physics.illinois.edu/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Illinois Urbana-Champaign",
+        "pi_name": "Wolfgang Pfaff"
+      }
     },
     {
       "id": "kollar_lab",
@@ -403,7 +456,11 @@
       ],
       "weight": 2,
       "source_url": "https://kollarlab.umd.edu/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Maryland / JQI",
+        "pi_name": "Alicia Kollár"
+      }
     },
     {
       "id": "nist_boulder_simmonds",
@@ -428,7 +485,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.nist.gov/people/raymond-simmonds",
-      "notes": "National-lab entry plotted under academic experiments."
+      "notes": "National-lab entry plotted under academic experiments.",
+      "marker_tooltip": {
+        "organization_name": "NIST Boulder",
+        "pi_name": "Raymond Simmonds"
+      }
     },
     {
       "id": "mit_lincoln_lab",
@@ -454,7 +515,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.ll.mit.edu/",
-      "notes": "National-lab / FFRDC entry plotted under academic experiments."
+      "notes": "National-lab / FFRDC entry plotted under academic experiments.",
+      "marker_tooltip": {
+        "organization_name": "MIT Lincoln Laboratory",
+        "pi_name": ""
+      }
     },
     {
       "id": "sqms_center",
@@ -480,7 +545,11 @@
       ],
       "weight": 2,
       "source_url": "https://sqmscenter.fnal.gov/",
-      "notes": "Center entry plotted under academic experiments."
+      "notes": "Center entry plotted under academic experiments.",
+      "marker_tooltip": {
+        "organization_name": "Fermilab",
+        "pi_name": ""
+      }
     },
     {
       "id": "c2qa",
@@ -506,7 +575,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.bnl.gov/quantumcenter/",
-      "notes": "Center entry plotted under academic experiments."
+      "notes": "Center entry plotted under academic experiments.",
+      "marker_tooltip": {
+        "organization_name": "Brookhaven National Laboratory",
+        "pi_name": ""
+      }
     },
     {
       "id": "wilson_lab_waterloo",
@@ -531,7 +604,11 @@
       ],
       "weight": 2,
       "source_url": "https://uwaterloo.ca/institute-for-quantum-computing/profiles/christopher-wilson",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Waterloo / IQC",
+        "pi_name": "Christopher Wilson"
+      }
     },
     {
       "id": "hofheinz_sherbrooke",
@@ -556,7 +633,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.usherbrooke.ca/iq/fr/a-propos/equipe/corps-professoral/max-hofheinz",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Université de Sherbrooke / Institut quantique",
+        "pi_name": "Max Hofheinz"
+      }
     },
     {
       "id": "wallraff_qudev",
@@ -582,7 +663,11 @@
       ],
       "weight": 3,
       "source_url": "https://qudev.phys.ethz.ch/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "ETH Zürich",
+        "pi_name": "Andreas Wallraff"
+      }
     },
     {
       "id": "psi_eth_sqc",
@@ -608,7 +693,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.psi.ch/en/lnq/superconducting-quantum-circuits",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Paul Scherrer Institute / ETH-PSI Quantum Computing Hub",
+        "pi_name": ""
+      }
     },
     {
       "id": "dicarlo_lab",
@@ -634,7 +723,11 @@
       ],
       "weight": 3,
       "source_url": "https://qutech.nl/lab/dicarlo-lab-welcome/dicarlo-lab-welcome/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "QuTech / TU Delft",
+        "pi_name": "Leonardo DiCarlo"
+      }
     },
     {
       "id": "chalmers_delsing_wacqt",
@@ -659,7 +752,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.chalmers.se/en/persons/delsing/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Chalmers University of Technology / WACQT",
+        "pi_name": "Per Delsing"
+      }
     },
     {
       "id": "oxford_leek_lab",
@@ -684,7 +781,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.physics.ox.ac.uk/research/group/superconducting-quantum-devices",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Oxford",
+        "pi_name": "Peter Leek"
+      }
     },
     {
       "id": "kit_pop_lab",
@@ -710,7 +811,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.phi.kit.edu/english/pop.php",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Karlsruhe Institute of Technology",
+        "pi_name": "Ioan M. Pop"
+      }
     },
     {
       "id": "innsbruck_kirchmair",
@@ -735,7 +840,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.uibk.ac.at/en/sp-physik/forschung/forschungsgruppen/experimental-physics/superconducting-quantum-circuits/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Innsbruck / IQOQI",
+        "pi_name": "Gerhard Kirchmair"
+      }
     },
     {
       "id": "aalto_kvantti",
@@ -760,7 +869,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.aalto.fi/en/department-of-applied-physics/superconducting-qubits-and-circuit-qed-kvantti",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Aalto University",
+        "pi_name": "Gheorghe-Sorin Paraoanu"
+      }
     },
     {
       "id": "institut_neel_sqc",
@@ -785,7 +898,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.sqc.cnrs.fr/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "CNRS Institut Néel",
+        "pi_name": ""
+      }
     },
     {
       "id": "quantic_paris",
@@ -811,7 +928,11 @@
       ],
       "weight": 3,
       "source_url": "https://quantic.phys.ens.fr/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "ENS / Inria / Mines / CNRS",
+        "pi_name": ""
+      }
     },
     {
       "id": "epfl_sqil",
@@ -836,7 +957,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.epfl.ch/labs/sqil/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "EPFL",
+        "pi_name": ""
+      }
     },
     {
       "id": "psi_grimm_lab",
@@ -861,7 +986,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.psi.ch/en/lnq/people/alexander-grimm",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Paul Scherrer Institute",
+        "pi_name": "Alexander Grimm"
+      }
     },
     {
       "id": "ifae_qct",
@@ -886,7 +1015,11 @@
       ],
       "weight": 2,
       "source_url": "https://qct.ifae.es/research/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "IFAE",
+        "pi_name": ""
+      }
     },
     {
       "id": "fbk_qtn_infn",
@@ -911,7 +1044,11 @@
       ],
       "weight": 1,
       "source_url": "https://www.fbk.eu/en/result/a-trento-il-primo-qubit-superconduttivo-made-in-italy/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Fondazione Bruno Kessler / Q@TN / INFN",
+        "pi_name": ""
+      }
     },
     {
       "id": "riken_nakamura",
@@ -936,7 +1073,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.riken.jp/en/research/labs/rqc/superconduct_qtm_electron/index.html",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "RIKEN Center for Quantum Computing / University of Tokyo",
+        "pi_name": "Yasunobu Nakamura"
+      }
     },
     {
       "id": "ustc_zuchongzhi",
@@ -962,7 +1103,11 @@
       ],
       "weight": 3,
       "source_url": "https://en.ustc.edu.cn/info/1007/5015.htm",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Science and Technology of China",
+        "pi_name": ""
+      }
     },
     {
       "id": "zhejiang_sqc",
@@ -987,7 +1132,11 @@
       ],
       "weight": 2,
       "source_url": "https://physics.zju.edu.cn/icmpen/2020/0716/c52566a2171471/page.htm",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Zhejiang University",
+        "pi_name": ""
+      }
     },
     {
       "id": "tsinghua_sun",
@@ -1012,7 +1161,11 @@
       ],
       "weight": 3,
       "source_url": "https://cqi.tsinghua.edu.cn/en/Research/Introduction/Superconducting_Quantum_Computing.htm",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Tsinghua University",
+        "pi_name": "Luyan Sun"
+      }
     },
     {
       "id": "baqis_sqc",
@@ -1037,7 +1190,11 @@
       ],
       "weight": 2,
       "source_url": "https://quantum.baqis.ac.cn/research/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Beijing Academy of Quantum Information Sciences",
+        "pi_name": ""
+      }
     },
     {
       "id": "nus_qcrew",
@@ -1062,7 +1219,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.cqt.sg/groups/yvonne-gao/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "National University of Singapore / CQT",
+        "pi_name": "Yvonne Gao"
+      }
     },
     {
       "id": "kriss_sqc",
@@ -1087,7 +1248,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.kriss.re.kr/menu.es?mid=a20807010000",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Korea Research Institute of Standards and Science",
+        "pi_name": ""
+      }
     },
     {
       "id": "korea_scqi_lab",
@@ -1112,7 +1277,11 @@
       ],
       "weight": 2,
       "source_url": "https://scqi.korea.ac.kr/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Korea University",
+        "pi_name": ""
+      }
     },
     {
       "id": "uq_fedorov_lab",
@@ -1137,7 +1306,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.sqdlab.org/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Queensland",
+        "pi_name": "Arkady Fedorov"
+      }
     },
     {
       "id": "sydney_sqc_lab",
@@ -1161,7 +1334,11 @@
       ],
       "weight": 2,
       "source_url": "https://quantum.sydney.edu.au/research/superconducting-quantum-circuits-laboratory/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Sydney",
+        "pi_name": ""
+      }
     },
     {
       "id": "technion_sqclab",
@@ -1186,7 +1363,11 @@
       ],
       "weight": 2,
       "source_url": "https://phsites.technion.ac.il/sqclab/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Technion",
+        "pi_name": ""
+      }
     },
     {
       "id": "rosenblum_lab",
@@ -1212,7 +1393,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.weizmann.ac.il/condmat/rosenblum/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Weizmann Institute of Science",
+        "pi_name": "Serge Rosenblum"
+      }
     },
     {
       "id": "hebrew_u_qis_center",
@@ -1236,7 +1421,11 @@
       ],
       "weight": 1,
       "source_url": "https://phys.huji.ac.il/quantum-information-science-center",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Hebrew University of Jerusalem",
+        "pi_name": ""
+      }
     },
     {
       "id": "koch_group",
@@ -1263,7 +1452,11 @@
       ],
       "weight": 3,
       "source_url": "https://sites.northwestern.edu/koch/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Northwestern University",
+        "pi_name": "Jens Koch"
+      }
     },
     {
       "id": "blais_group",
@@ -1289,7 +1482,11 @@
       ],
       "weight": 3,
       "source_url": "https://circuitqedsherbrooke.ca/en/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Université de Sherbrooke / Institut quantique",
+        "pi_name": "Alexandre Blais"
+      }
     },
     {
       "id": "girvin_group",
@@ -1315,7 +1512,11 @@
       ],
       "weight": 3,
       "source_url": "https://quantuminstitute.yale.edu/people/steven-girvin",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Yale University",
+        "pi_name": "Steven Girvin"
+      }
     },
     {
       "id": "tureci_group",
@@ -1340,7 +1541,11 @@
       ],
       "weight": 2,
       "source_url": "https://ece.princeton.edu/people/hakan-tureci",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Princeton University",
+        "pi_name": "Hakan Türeci"
+      }
     },
     {
       "id": "jiang_group",
@@ -1366,7 +1571,11 @@
       ],
       "weight": 3,
       "source_url": "https://pme.uchicago.edu/group/jiang-group",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "University of Chicago",
+        "pi_name": "Liang Jiang"
+      }
     },
     {
       "id": "mirrahimi_quantic",
@@ -1392,7 +1601,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.inria.fr/en/interview-mazyar-mirrahimi-quantic-qubits-cat-michel-devoret",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Inria / ENS / Quantic",
+        "pi_name": "Mazyar Mirrahimi"
+      }
     },
     {
       "id": "johansson_theory",
@@ -1418,7 +1631,11 @@
       ],
       "weight": 2,
       "source_url": "https://research.chalmers.se/en/person/gojo71",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Chalmers University of Technology",
+        "pi_name": "Göran Johansson"
+      }
     },
     {
       "id": "kamal_quest",
@@ -1443,7 +1660,11 @@
       ],
       "weight": 2,
       "source_url": "https://physics.northwestern.edu/people/faculty/core-faculty/archana-kamal.html",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Northwestern University",
+        "pi_name": "Archana Kamal"
+      }
     },
     {
       "id": "divincenzo_group",
@@ -1468,7 +1689,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.fz-juelich.de/en/research/research-fields/information/quantum-technology/david-divincenzo",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Forschungszentrum Jülich / RWTH Aachen",
+        "pi_name": "David DiVincenzo"
+      }
     },
     {
       "id": "wilhelm_mauch_group",
@@ -1493,7 +1718,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.fz-juelich.de/en/research/research-fields/information/quantum-technologies/frank-wilhelm-mauch",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Forschungszentrum Jülich / Saarland University",
+        "pi_name": "Frank Wilhelm-Mauch"
+      }
     },
     {
       "id": "ankerhold_group",
@@ -1518,7 +1747,11 @@
       ],
       "weight": 1,
       "source_url": "https://www.uni-ulm.de/en/nawi/institute-for-complex-quantum-systems/team/members-of-the-institute/prof-dr-joachim-ankerhold/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Ulm University",
+        "pi_name": "Joachim Ankerhold"
+      }
     },
     {
       "id": "ibm_quantum",
@@ -1544,7 +1777,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.ibm.com/quantum",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "IBM",
+        "pi_name": ""
+      }
     },
     {
       "id": "google_quantum_ai",
@@ -1570,7 +1807,11 @@
       ],
       "weight": 3,
       "source_url": "https://quantumai.google/quantumcomputer",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Google",
+        "pi_name": ""
+      }
     },
     {
       "id": "rigetti",
@@ -1596,7 +1837,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.rigetti.com/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Rigetti Computing",
+        "pi_name": ""
+      }
     },
     {
       "id": "aws_cqc",
@@ -1622,7 +1867,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.aboutamazon.com/news/aws/quantum-computing-aws-ocelot-chip",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Amazon Web Services",
+        "pi_name": ""
+      }
     },
     {
       "id": "qolab",
@@ -1647,7 +1896,11 @@
       ],
       "weight": 2,
       "source_url": "https://qolab.ai/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Qolab",
+        "pi_name": ""
+      }
     },
     {
       "id": "dwave_qci",
@@ -1673,7 +1926,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.dwavequantum.com/company/newsroom/press-release/d-wave-completes-acquisition-of-quantum-circuits/",
-      "notes": "Treat as gate-model superconducting via Quantum Circuits; keep D-Wave annealing as a separate optional layer if desired."
+      "notes": "Treat as gate-model superconducting via Quantum Circuits; keep D-Wave annealing as a separate optional layer if desired.",
+      "marker_tooltip": {
+        "organization_name": "D-Wave Quantum / Quantum Circuits",
+        "pi_name": ""
+      }
     },
     {
       "id": "seeqc",
@@ -1698,7 +1955,11 @@
       ],
       "weight": 2,
       "source_url": "https://seeqc.com/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "SEEQC",
+        "pi_name": ""
+      }
     },
     {
       "id": "iqm",
@@ -1724,7 +1985,11 @@
       ],
       "weight": 3,
       "source_url": "https://meetiqm.com/technology/qpu/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "IQM",
+        "pi_name": ""
+      }
     },
     {
       "id": "oqc",
@@ -1749,7 +2014,11 @@
       ],
       "weight": 3,
       "source_url": "https://oqc.tech/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "OQC",
+        "pi_name": ""
+      }
     },
     {
       "id": "alice_bob",
@@ -1774,7 +2043,11 @@
       ],
       "weight": 3,
       "source_url": "https://alice-bob.com/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Alice & Bob",
+        "pi_name": ""
+      }
     },
     {
       "id": "quantware",
@@ -1799,7 +2072,11 @@
       ],
       "weight": 3,
       "source_url": "https://www.quantware.com/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "QuantWare",
+        "pi_name": ""
+      }
     },
     {
       "id": "nord_quantique",
@@ -1824,7 +2101,11 @@
       ],
       "weight": 3,
       "source_url": "https://nordquantique.com/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Nord Quantique",
+        "pi_name": ""
+      }
     },
     {
       "id": "origin_quantum",
@@ -1849,7 +2130,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.originqc.com.cn/",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Origin Quantum",
+        "pi_name": ""
+      }
     },
     {
       "id": "riken_fujitsu",
@@ -1873,7 +2158,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.riken.jp/en/research/labs/rqc/riken_fujitsu/index.html",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "Fujitsu / RIKEN",
+        "pi_name": ""
+      }
     },
     {
       "id": "nec",
@@ -1898,7 +2187,11 @@
       ],
       "weight": 2,
       "source_url": "https://www.nec.com/en/press/202406/global_20240603_02.html",
-      "notes": ""
+      "notes": "",
+      "marker_tooltip": {
+        "organization_name": "NEC",
+        "pi_name": ""
+      }
     }
   ]
 }

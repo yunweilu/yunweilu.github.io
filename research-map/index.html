@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Research Map | Yunwei Lu</title>
-  <meta name="description" content="Interactive superconducting-qubit research map by country.">
+  <meta name="description" content="Interactive superconducting-qubit research marker map.">
   <meta name="author" content="Yunwei Lu">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://yunweilu.github.io/research-map/">
@@ -44,8 +44,8 @@
         </div>
         <div class="map-summary" aria-label="Map summary">
           <div class="summary-pill">
-            <strong id="countryCount">0</strong>
-            <span>Countries</span>
+            <strong id="locationCount">0</strong>
+            <span>Locations</span>
           </div>
           <div class="summary-pill">
             <strong id="visibleEntryCount">0</strong>
@@ -58,7 +58,7 @@
 
       <div class="map-card">
         <svg
-          aria-label="World choropleth map of superconducting-qubit research groups"
+          aria-label="World marker map of superconducting-qubit research groups"
           class="world-map"
           id="worldMap"
           role="img"
@@ -66,7 +66,7 @@
         ></svg>
         <div class="map-tooltip" id="mapTooltip" hidden></div>
         <div class="map-legend" aria-label="Map color legend">
-          <p class="legend-title">Color shows the selected category intensity by country.</p>
+          <p class="legend-title">Markers show groups and companies in the selected category.</p>
           <div class="legend-items">
             <div class="legend-item">
               <span class="legend-ramp legend-blue"></span>
@@ -85,10 +85,10 @@
       </div>
     </section>
 
-    <aside class="details-panel" id="detailsPanel" aria-label="Country details">
+    <aside class="details-panel" id="detailsPanel" aria-label="Marker details">
       <div class="details-empty">
-        <h2>Select a country</h2>
-        <p>Hover over a highlighted country for counts, or click it to inspect the groups and companies represented in the dataset.</p>
+        <h2>Select a marker</h2>
+        <p>Hover over a marker to see the institution or company and PI name.</p>
       </div>
     </aside>
   </main>

@@ -18,82 +18,27 @@ const layers = {
 
 const layerOrder = Object.keys(layers);
 let activeLayer = "academic_experiments";
-let countries = {};
-let topologyFeatures = [];
+let researchEntries = [];
 let landFeature = null;
-let selectedIso3 = null;
+let selectedEntryId = null;
 
-const iso3ToNumericId = {
-  AUS: "036",
-  AUT: "040",
-  CAN: "124",
-  CHE: "756",
-  CHN: "156",
-  DEU: "276",
-  ESP: "724",
-  FIN: "246",
-  FRA: "250",
-  GBR: "826",
-  ISR: "376",
-  ITA: "380",
-  JPN: "392",
-  KOR: "410",
-  NLD: "528",
-  SGP: "702",
-  SWE: "752",
-  USA: "840",
-};
+function activeEntries() {
+  return researchEntries.filter((entry) => entry.layer === activeLayer);
+}
 
-const numericIdToIso3 = Object.fromEntries(
-  Object.entries(iso3ToNumericId).map(([iso3, id]) => [id, iso3]),
-);
-
-function emptyCounts() {
-  return {
-    academic_theory: 0,
-    academic_experiments: 0,
-    industry: 0,
+function markerTooltip(entry) {
+  return entry.marker_tooltip || {
+    organization_name: entry.institution || entry.name,
+    pi_name: entry.lead || "",
   };
 }
 
-function aggregateByCountry(entries) {
-  return entries.reduce((acc, group) => {
-    if (!acc[group.iso3]) {
-      acc[group.iso3] = {
-        country: group.country,
-        iso3: group.iso3,
-        region: group.region,
-        counts: emptyCounts(),
-        groups: [],
-        total: 0,
-      };
-    }
-
-    acc[group.iso3].counts[group.layer] += 1;
-    acc[group.iso3].groups.push(group);
-    acc[group.iso3].total += 1;
-    return acc;
-  }, {});
-}
-
-function maxForLayer(layer) {
-  return Object.values(countries).reduce((max, country) => Math.max(max, country.counts[layer]), 0);
-}
-
-function intensity(count, maxCount) {
-  if (count <= 0 || maxCount <= 0) {
-    return 0;
-  }
-
-  return Math.max(1, Math.ceil((count / maxCount) * 5));
-}
-
-function activeTotal(country) {
-  return country.counts[activeLayer];
-}
-
-function hasActiveGroups(country) {
-  return Boolean(country && country.counts[activeLayer] > 0);
+function tooltipHtml(entry) {
+  const tooltip = markerTooltip(entry);
+  return [
+    `<strong>${tooltip.organization_name}</strong>`,
+    tooltip.pi_name ? `<div class="tooltip-pi">${tooltip.pi_name}</div>` : "",
+  ].join("");
 }
 
 function renderFilters() {
@@ -109,8 +54,8 @@ function renderFilters() {
     button.addEventListener("click", () => {
       activeLayer = layer;
 
-      if (selectedIso3 && !hasActiveGroups(countries[selectedIso3])) {
-        selectedIso3 = null;
+      if (selectedEntryId && !activeEntries().some((entry) => entry.id === selectedEntryId)) {
+        selectedEntryId = null;
       }
 
       render();
@@ -119,65 +64,53 @@ function renderFilters() {
   });
 }
 
-function countryClass(country) {
+function markerClass(entry) {
   return [
-    "map-country",
-    "has-data",
-    `layer-${layers[activeLayer].className}`,
-    `intensity-${intensity(country.counts[activeLayer], maxForLayer(activeLayer))}`,
-    selectedIso3 === country.iso3 ? "selected" : "",
-  ].join(" ");
+    "map-marker",
+    `marker-${layers[entry.layer].className}`,
+    selectedEntryId === entry.id ? "selected" : "",
+  ].filter(Boolean).join(" ");
 }
 
-function tooltipHtml(country) {
-  return [
-    `<strong>${country.country}</strong>`,
-    ...layerOrder.map((layer) => `<div class="tooltip-row"><span>${layers[layer].label}</span><span>${country.counts[layer]}</span></div>`),
-  ].join("");
+function markerRadius(entry) {
+  if (entry.weight >= 3) {
+    return 6.8;
+  }
+
+  if (entry.weight === 2) {
+    return 5.8;
+  }
+
+  return 4.8;
 }
 
-function polygonIntersectsBbox(polygon, [minLon, minLat, maxLon, maxLat]) {
-  return polygon.some((ring) =>
-    ring.some(([lon, lat]) =>
-      lon >= minLon && lon <= maxLon && lat >= minLat && lat <= maxLat,
-    ),
-  );
-}
+function entriesWithOffsets(entries) {
+  const buckets = new Map();
 
-function restrictFeatureToBbox(feature, bbox) {
-  if (feature.geometry.type === "MultiPolygon") {
-    const coordinates = feature.geometry.coordinates.filter((polygon) =>
-      polygonIntersectsBbox(polygon, bbox),
-    );
+  entries.forEach((entry) => {
+    const key = `${entry.latitude.toFixed(3)},${entry.longitude.toFixed(3)}`;
+    const bucket = buckets.get(key) || [];
+    bucket.push(entry);
+    buckets.set(key, bucket);
+  });
 
+  return entries.map((entry) => {
+    const key = `${entry.latitude.toFixed(3)},${entry.longitude.toFixed(3)}`;
+    const bucket = buckets.get(key);
+    const index = bucket.indexOf(entry);
+
+    if (bucket.length === 1) {
+      return { entry, offsetX: 0, offsetY: 0 };
+    }
+
+    const angle = (Math.PI * 2 * index) / bucket.length;
+    const radius = 9;
     return {
-      ...feature,
-      geometry: {
-        ...feature.geometry,
-        coordinates,
-      },
+      entry,
+      offsetX: Math.cos(angle) * radius,
+      offsetY: Math.sin(angle) * radius,
     };
-  }
-
-  if (feature.geometry.type === "Polygon" && !polygonIntersectsBbox(feature.geometry.coordinates, bbox)) {
-    return {
-      ...feature,
-      geometry: {
-        ...feature.geometry,
-        coordinates: [],
-      },
-    };
-  }
-
-  return feature;
-}
-
-function normalizeResearchFeature(feature, iso3) {
-  if (iso3 === "FRA") {
-    return restrictFeatureToBbox(feature, [-6, 41, 10, 52]);
-  }
-
-  return feature;
+  });
 }
 
 function renderMap() {
@@ -206,24 +139,34 @@ function renderMap() {
     .attr("class", "continent-outline")
     .attr("d", path);
 
-  const activeFeatures = topologyFeatures
-    .map((feature) => {
-      const iso3 = numericIdToIso3[feature.id];
-      return { feature: iso3 ? normalizeResearchFeature(feature, iso3) : feature, iso3 };
-    })
-    .filter((item) => item.iso3 && hasActiveGroups(countries[item.iso3]));
+  const markerData = entriesWithOffsets(activeEntries())
+    .map(({ entry, offsetX, offsetY }) => {
+      const projected = projection([entry.longitude, entry.latitude]);
+      return {
+        entry,
+        x: projected[0] + offsetX,
+        y: projected[1] + offsetY,
+      };
+    });
 
   svg.append("g")
-    .selectAll("path")
-    .data(activeFeatures)
-    .join("path")
-    .attr("class", (d) => countryClass(countries[d.iso3]))
-    .attr("d", (d) => path(d.feature))
-    .attr("aria-label", (d) => `${countries[d.iso3].country} ${countries[d.iso3].counts[activeLayer]} ${layers[activeLayer].label} entries`)
+    .selectAll("circle")
+    .data(markerData)
+    .join("circle")
+    .attr("class", (d) => markerClass(d.entry))
+    .attr("cx", (d) => d.x)
+    .attr("cy", (d) => d.y)
+    .attr("r", (d) => markerRadius(d.entry))
+    .attr("aria-label", (d) => {
+      const tooltip = markerTooltip(d.entry);
+      return tooltip.pi_name
+        ? `${tooltip.organization_name}, ${tooltip.pi_name}`
+        : tooltip.organization_name;
+    })
     .attr("role", "button")
     .attr("tabindex", "0")
     .on("click", (event, d) => {
-      selectedIso3 = d.iso3;
+      selectedEntryId = d.entry.id;
       render();
     })
     .on("keydown", (event, d) => {
@@ -232,14 +175,14 @@ function renderMap() {
       }
 
       event.preventDefault();
-      selectedIso3 = d.iso3;
+      selectedEntryId = d.entry.id;
       render();
     })
     .on("mousemove", (event, d) => {
       tooltip.hidden = false;
       tooltip.style.left = `${event.clientX + 14}px`;
       tooltip.style.top = `${event.clientY + 14}px`;
-      tooltip.innerHTML = tooltipHtml(countries[d.iso3]);
+      tooltip.innerHTML = tooltipHtml(d.entry);
     })
     .on("mouseleave", () => {
       tooltip.hidden = true;
@@ -248,59 +191,43 @@ function renderMap() {
 
 function renderPanel() {
   const panel = document.getElementById("detailsPanel");
-  const country = selectedIso3 ? countries[selectedIso3] : null;
+  const entry = selectedEntryId
+    ? researchEntries.find((candidate) => candidate.id === selectedEntryId)
+    : null;
 
-  if (!country) {
-    panel.innerHTML = '<div class="details-empty"><h2>Select a country</h2><p>Hover over a highlighted country for counts, or click it to inspect the groups and companies represented in the dataset.</p></div>';
+  if (!entry) {
+    panel.innerHTML = '<div class="details-empty"><h2>Select a marker</h2><p>Hover over a marker to see the institution or company and PI name.</p></div>';
     return;
   }
 
-  const visibleGroups = country.groups.filter((group) => group.layer === activeLayer);
-  const groupItems = visibleGroups.map((group) => {
-    const location = `${group.city}${group.state_province ? `, ${group.state_province}` : ""}`;
-    const tags = [
-      `<span class="group-tag">${layers[group.layer].label}</span>`,
-      ...group.focus_tags.slice(0, 3).map((tag) => `<span class="group-tag">${tag}</span>`),
-    ].join("");
-
-    return `
-      <li class="group-item">
-        <h3>${group.name}</h3>
-        <p class="group-meta">${group.institution}${group.lead ? ` - ${group.lead}` : ""}<br>${location}</p>
-        <div class="group-tags">${tags}</div>
-        ${group.source_url ? `<a class="group-link" href="${group.source_url}" rel="noreferrer" target="_blank">Source</a>` : ""}
-      </li>
-    `;
-  }).join("");
+  const tooltip = markerTooltip(entry);
 
   panel.innerHTML = `
     <div class="details-content">
       <div class="panel-heading">
         <div>
-          <p class="tagline">${country.iso3}</p>
-          <h2>${country.country}</h2>
+          <p class="tagline">${layers[entry.layer].label}</p>
+          <h2>${tooltip.organization_name}</h2>
         </div>
-        <button aria-label="Close country details" class="panel-close" id="closePanel" type="button">x</button>
+        <button aria-label="Close marker details" class="panel-close" id="closePanel" type="button">x</button>
       </div>
-      <div class="panel-counts">
-        ${layerOrder.map((layer) => `<div class="panel-count"><strong>${country.counts[layer]}</strong><span>${layers[layer].label}</span></div>`).join("")}
-      </div>
-      <p>Showing ${visibleGroups.length} ${layers[activeLayer].label.toLowerCase()} entries in this country.</p>
-      <ul class="group-list">${groupItems}</ul>
+      ${tooltip.pi_name ? `<p class="group-meta">${tooltip.pi_name}</p>` : ""}
     </div>
   `;
 
   document.getElementById("closePanel").addEventListener("click", () => {
-    selectedIso3 = null;
+    selectedEntryId = null;
     render();
   });
 }
 
 function renderSummary() {
-  const visibleEntries = Object.values(countries).reduce((sum, country) => sum + activeTotal(country), 0);
-  const visibleCountries = Object.values(countries).filter(hasActiveGroups).length;
-  document.getElementById("countryCount").textContent = String(visibleCountries);
-  document.getElementById("visibleEntryCount").textContent = String(visibleEntries);
+  const entries = activeEntries();
+  const uniqueLocations = new Set(
+    entries.map((entry) => `${entry.latitude.toFixed(3)},${entry.longitude.toFixed(3)}`),
+  );
+  document.getElementById("locationCount").textContent = String(uniqueLocations.size);
+  document.getElementById("visibleEntryCount").textContent = String(entries.length);
 }
 
 function render() {
@@ -315,22 +242,15 @@ Promise.all([
   fetch("../static/data/countries-50m.json").then((response) => response.json()),
 ])
   .then(([dataset, topology]) => {
-    countries = aggregateByCountry(dataset.entries);
+    researchEntries = dataset.entries;
     const visibleGeometries = topology.objects.countries.geometries
       .filter((geometry) => geometry.properties.name !== "Antarctica");
-    topologyFeatures = topojson.feature(topology, {
-      type: "GeometryCollection",
-      geometries: visibleGeometries,
-    }).features;
     landFeature = {
       type: "Feature",
       properties: { name: "World land without Antarctica" },
       geometry: topojson.merge(topology, visibleGeometries),
     };
     document.getElementById("mapScope").textContent = dataset.metadata.scope;
-    Object.values(countries).forEach((country) => {
-      country.groups.sort((a, b) => a.name.localeCompare(b.name));
-    });
     render();
   })
   .catch(() => {

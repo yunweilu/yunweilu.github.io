@@ -332,6 +332,33 @@ body {
 .layer-industry.intensity-4 { fill: #f97316; }
 .layer-industry.intensity-5 { fill: #c2410c; }
 
+.map-marker {
+  cursor: pointer;
+  stroke: #ffffff;
+  stroke-width: 1.8;
+  filter: drop-shadow(0 5px 6px rgba(5, 58, 83, 0.32));
+  transition: opacity 160ms ease, r 160ms ease, stroke-width 160ms ease;
+}
+
+.map-marker:hover,
+.map-marker.selected {
+  opacity: 0.88;
+  r: 8;
+  stroke-width: 2.4;
+}
+
+.marker-academic-theory {
+  fill: #2563eb;
+}
+
+.marker-academic-experiments {
+  fill: #dc2626;
+}
+
+.marker-industry {
+  fill: #f97316;
+}
+
 .map-tooltip {
   position: fixed;
   z-index: 40;
@@ -347,20 +374,13 @@ body {
 
 .map-tooltip strong {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
-.tooltip-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+.tooltip-pi {
   color: #475467;
-  font-size: 0.84rem;
-}
-
-.tooltip-row + .tooltip-row {
-  margin-top: 5px;
+  font-size: 0.9rem;
+  font-weight: 650;
 }
 
 .map-legend {
