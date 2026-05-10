@@ -8,17 +8,14 @@ export const LAYERS = {
   academic_theory: {
     label: "Academic Theory",
     className: "academic-theory",
-    legendClass: "legend-blue",
   },
   academic_experiments: {
     label: "Academic Experiments",
     className: "academic-experiments",
-    legendClass: "legend-red",
   },
   industry: {
     label: "Industry",
     className: "industry",
-    legendClass: "legend-orange",
   },
 } as const;
 
@@ -406,17 +403,6 @@ export default function ResearchMap({ dataset }: ResearchMapProps) {
             </div>
           ) : null}
 
-          <div className="map-legend" aria-label="Map color legend">
-            <p className="legend-title">Color shows the dominant active category by country.</p>
-            <div className="legend-items">
-              {(Object.keys(LAYERS) as LayerKey[]).map((layer) => (
-                <div className="legend-item" key={layer}>
-                  <span className={`legend-ramp ${LAYERS[layer].legendClass}`} />
-                  <span>{LAYERS[layer].label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 
