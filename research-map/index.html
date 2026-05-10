@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Map | Yunwei Lu</title>
+  <meta name="description" content="Interactive superconducting-qubit research map by country.">
+  <meta name="author" content="Yunwei Lu">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yunweilu.github.io/research-map/">
+  <link rel="stylesheet" href="../static/css/styles.css">
+  <style>
+    html,
+    body {
+      height: auto;
+      min-height: 100%;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body class="map-page">
+  <header class="intro-top">
+    <a class="brand" href="../" aria-label="Yunwei Lu home">
+      <img src="../static/images/logo.png" alt="Qoolantum logo">
+    </a>
+    <div class="header-copy">
+      <p class="tagline">Quantum is cool.</p>
+      <nav class="primary-links" aria-label="Primary links">
+        <a href="../#about">About Me</a>
+        <a href="../#tutorials">Tutorials</a>
+        <a href="../#research">Research Interest</a>
+        <a href="./" aria-current="page">Research Map</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="map-page-shell">
+    <section class="map-workspace" aria-label="Superconducting qubit research map">
+      <div class="map-header">
+        <div>
+          <p class="tagline">Superconducting Qubits</p>
+          <h1>Research Map</h1>
+          <p id="mapScope">Country-level map of superconducting-qubit academic groups, centers, and companies.</p>
+        </div>
+        <div class="map-summary" aria-label="Map summary">
+          <div class="summary-pill">
+            <strong id="countryCount">0</strong>
+            <span>Countries</span>
+          </div>
+          <div class="summary-pill">
+            <strong id="visibleEntryCount">0</strong>
+            <span>Visible Entries</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-filters" id="mapFilters" aria-label="Research category filters"></div>
+
+      <div class="map-card">
+        <svg
+          aria-label="World choropleth map of superconducting-qubit research groups"
+          class="world-map"
+          id="worldMap"
+          role="img"
+          viewBox="0 0 1000 520"
+        ></svg>
+        <div class="map-tooltip" id="mapTooltip" hidden></div>
+        <div class="map-legend" aria-label="Map color legend">
+          <p class="legend-title">Color shows the dominant active category by country.</p>
+          <div class="legend-items">
+            <div class="legend-item">
+              <span class="legend-ramp legend-blue"></span>
+              <span>Academic Theory</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-ramp legend-red"></span>
+              <span>Academic Experiments</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-ramp legend-orange"></span>
+              <span>Industry</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="details-panel" id="detailsPanel" aria-label="Country details">
+      <div class="details-empty">
+        <h2>Select a country</h2>
+        <p>Hover over a highlighted country for counts, or click it to inspect the groups and companies represented in the dataset.</p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="../static/js/research-map.js" defer></script>
+</body>
+</html>
