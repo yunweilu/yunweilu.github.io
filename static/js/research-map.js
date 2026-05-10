@@ -21,6 +21,7 @@ let activeLayer = "academic_experiments";
 let researchEntries = [];
 let landFeature = null;
 let selectedEntryId = null;
+let currentZoomTransform = d3.zoomIdentity;
 
 function activeEntries() {
   return researchEntries.filter((entry) => entry.layer === activeLayer);
@@ -84,6 +85,31 @@ function markerRadius(entry) {
   return 4.8;
 }
 
+function applyZoomTransform(viewport, transform) {
+  viewport.attr("transform", transform);
+  viewport.select(".continent-outline")
+    .attr("stroke-width", 1.1 / transform.k);
+  viewport.selectAll(".map-marker")
+    .attr("r", (d) => markerRadius(d.entry) / transform.k)
+    .attr("stroke-width", 1.8 / transform.k);
+}
+
+function bindZoomControls(svg, zoom) {
+  const zoomIn = document.getElementById("zoomIn");
+  const zoomOut = document.getElementById("zoomOut");
+  const zoomReset = document.getElementById("zoomReset");
+
+  zoomIn.onclick = () => {
+    svg.transition().duration(180).call(zoom.scaleBy, 1.8);
+  };
+  zoomOut.onclick = () => {
+    svg.transition().duration(180).call(zoom.scaleBy, 1 / 1.8);
+  };
+  zoomReset.onclick = () => {
+    svg.transition().duration(180).call(zoom.transform, d3.zoomIdentity);
+  };
+}
+
 function entriesWithOffsets(entries) {
   const buckets = new Map();
 
@@ -129,12 +155,15 @@ function renderMap() {
     .attr("height", height)
     .attr("fill", "transparent");
 
-  svg.append("path")
+  const viewport = svg.append("g")
+    .attr("class", "map-viewport");
+
+  viewport.append("path")
     .datum(landFeature)
     .attr("class", "continent-land")
     .attr("d", path);
 
-  svg.append("path")
+  viewport.append("path")
     .datum(landFeature)
     .attr("class", "continent-outline")
     .attr("d", path);
@@ -149,7 +178,7 @@ function renderMap() {
       };
     });
 
-  svg.append("g")
+  viewport.append("g")
     .selectAll("circle")
     .data(markerData)
     .join("circle")
@@ -187,6 +216,20 @@ function renderMap() {
     .on("mouseleave", () => {
       tooltip.hidden = true;
     });
+
+  const zoom = d3.zoom()
+    .scaleExtent([1, 14])
+    .extent([[0, 0], [width, height]])
+    .translateExtent([[0, 0], [width, height]])
+    .on("zoom", (event) => {
+      currentZoomTransform = event.transform;
+      applyZoomTransform(viewport, currentZoomTransform);
+    });
+
+  svg.call(zoom)
+    .on("dblclick.zoom", null)
+    .call(zoom.transform, currentZoomTransform);
+  bindZoomControls(svg, zoom);
 }
 
 function renderPanel() {
