@@ -286,6 +286,14 @@ body {
   stroke: none;
 }
 
+.continent-outline {
+  fill: none;
+  stroke: rgba(7, 83, 112, 0.68);
+  stroke-linejoin: round;
+  stroke-width: 1.1;
+  pointer-events: none;
+}
+
 .map-country {
   stroke: none;
   transition: fill 160ms ease, filter 160ms ease, opacity 160ms ease;
@@ -323,23 +331,6 @@ body {
 .layer-industry.intensity-3 { fill: #fb923c; }
 .layer-industry.intensity-4 { fill: #f97316; }
 .layer-industry.intensity-5 { fill: #c2410c; }
-
-.country-label {
-  fill: #0b1437;
-  paint-order: stroke;
-  stroke: rgba(255, 255, 255, 0.74);
-  stroke-width: 3px;
-  stroke-linejoin: round;
-  font-size: 10px;
-  font-weight: 900;
-  pointer-events: none;
-  text-anchor: middle;
-  text-transform: uppercase;
-}
-
-.country-label.small-country {
-  font-size: 8px;
-}
 
 .map-tooltip {
   position: fixed;

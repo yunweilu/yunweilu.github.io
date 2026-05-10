@@ -48,22 +48,6 @@ const numericIdToIso3 = Object.fromEntries(
   Object.entries(iso3ToNumericId).map(([iso3, id]) => [id, iso3]),
 );
 
-const labelOffsets = {
-  AUT: [0, 7],
-  CHE: [-10, 9],
-  ESP: [-8, 8],
-  FRA: [-8, -4],
-  GBR: [-6, -10],
-  ISR: [14, 2],
-  ITA: [12, 12],
-  JPN: [18, 8],
-  KOR: [12, 0],
-  NLD: [8, -10],
-  SGP: [17, 8],
-};
-
-const smallLabelCountries = new Set(["AUT", "CHE", "ISR", "NLD", "SGP"]);
-
 function emptyCounts() {
   return {
     academic_theory: 0,
@@ -152,6 +136,50 @@ function tooltipHtml(country) {
   ].join("");
 }
 
+function polygonIntersectsBbox(polygon, [minLon, minLat, maxLon, maxLat]) {
+  return polygon.some((ring) =>
+    ring.some(([lon, lat]) =>
+      lon >= minLon && lon <= maxLon && lat >= minLat && lat <= maxLat,
+    ),
+  );
+}
+
+function restrictFeatureToBbox(feature, bbox) {
+  if (feature.geometry.type === "MultiPolygon") {
+    const coordinates = feature.geometry.coordinates.filter((polygon) =>
+      polygonIntersectsBbox(polygon, bbox),
+    );
+
+    return {
+      ...feature,
+      geometry: {
+        ...feature.geometry,
+        coordinates,
+      },
+    };
+  }
+
+  if (feature.geometry.type === "Polygon" && !polygonIntersectsBbox(feature.geometry.coordinates, bbox)) {
+    return {
+      ...feature,
+      geometry: {
+        ...feature.geometry,
+        coordinates: [],
+      },
+    };
+  }
+
+  return feature;
+}
+
+function normalizeResearchFeature(feature, iso3) {
+  if (iso3 === "FRA") {
+    return restrictFeatureToBbox(feature, [-6, 41, 10, 52]);
+  }
+
+  return feature;
+}
+
 function renderMap() {
   const tooltip = document.getElementById("mapTooltip");
   const svg = d3.select("#worldMap");
@@ -173,8 +201,16 @@ function renderMap() {
     .attr("class", "continent-land")
     .attr("d", path);
 
+  svg.append("path")
+    .datum(landFeature)
+    .attr("class", "continent-outline")
+    .attr("d", path);
+
   const activeFeatures = topologyFeatures
-    .map((feature) => ({ feature, iso3: numericIdToIso3[feature.id] }))
+    .map((feature) => {
+      const iso3 = numericIdToIso3[feature.id];
+      return { feature: iso3 ? normalizeResearchFeature(feature, iso3) : feature, iso3 };
+    })
     .filter((item) => item.iso3 && hasActiveGroups(countries[item.iso3]));
 
   svg.append("g")
@@ -208,21 +244,6 @@ function renderMap() {
     .on("mouseleave", () => {
       tooltip.hidden = true;
     });
-
-  svg.append("g")
-    .selectAll("text")
-    .data(activeFeatures)
-    .join("text")
-    .attr("class", (d) => `country-label${smallLabelCountries.has(d.iso3) ? " small-country" : ""}`)
-    .attr("x", (d) => {
-      const offset = labelOffsets[d.iso3] || [0, 0];
-      return path.centroid(d.feature)[0] + offset[0];
-    })
-    .attr("y", (d) => {
-      const offset = labelOffsets[d.iso3] || [0, 0];
-      return path.centroid(d.feature)[1] + offset[1];
-    })
-    .text((d) => countries[d.iso3].country);
 }
 
 function renderPanel() {
